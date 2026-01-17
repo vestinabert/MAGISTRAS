@@ -1,0 +1,202 @@
+flowchart TB
+
+%% =====================================================
+%% 1 FAZĖ – TEORIJA IR PASIRENGIMAS
+%% =====================================================
+A1[AST analizės teorija
+Sintaksės medis
+Mazgų hierarchija
+Kodo struktūra]
+
+A2[Valdymo srauto samprata
+Šakos
+Ciklai
+Sąlygos]
+
+A3[Duomenų srauto samprata
+Įvesties funkcijos
+„Sink“ funkcijos
+Heuristinė taint analizė]
+
+A4[Reprezentacijos pasirinkimas
+AST pagrindu paremta analizė
+Mastelio didinimas
+Interpretuojamumas]
+
+%% =====================================================
+%% 2 FAZĖ – ĮRANKIAI IR APLINKA
+%% =====================================================
+B1[Scala ir Joern pagrindai]
+
+B2[Joern sistemos paruošimas
+CPG generavimas]
+
+B3[AST užklausų testavimas
+Juliet pavyzdžiai]
+
+%% =====================================================
+%% 3 FAZĖ – DUOMENŲ RINKINYS
+%% =====================================================
+C1[Juliet Test Suite]
+
+C2[Analizuojamos CWE klasės
+CWE121_Stack_Based_Buffer_Overflow
+CWE122_Heap_Based_Buffer_Overflow
+CWE124_Buffer_Underwrite
+CWE126_Buffer_Overread
+CWE127_Buffer_Underread
+CWE134_Uncontrolled_Format_String
+CWE415_Double_Free
+CWE416_Use_After_Free
+CWE426_Untrusted_Search_Path
+CWE427_Uncontrolled_Search_Path_Element
+CWE680_Integer_Overflow_to_Buffer_Overflow
+CWE78_OS_Command_Injection]
+
+C3[Atskira analizė kiekvienai CWE
+Vienas .ipynb failas]
+
+%% =====================================================
+%% 4 FAZĖ – KODO ANALIZĖ
+%% =====================================================
+D1[C kodo analizė naudojant Joern]
+
+D2[Funkcijų lygmens išgavimas]
+
+D3[Automatinis žymėjimas
+good = 0
+bad = 1]
+
+%% =====================================================
+%% 5 FAZĖ – SAVYBIŲ IŠGAVIMAS
+%% =====================================================
+E1[AST struktūrinės savybės
+AST mazgų skaičius
+Gylis
+Iškvietimai]
+
+E2[Valdymo srauto heuristikos
+Šakos
+Ciklai
+Ciklomatinis sudėtingumas]
+
+E3[Atminties ir API naudojimas
+Įvesties funkcijos
+Konversijos
+„Sink“ iškvietimai]
+
+E4[Validacija ir apsaugos
+Ribų patikrinimai
+NULL patikrinimai]
+
+E5[Heuristinė taint savybė
+Įvestis IR „sink“]
+
+%% =====================================================
+%% 6 FAZĖ – SAVYBIŲ MATRICA
+%% =====================================================
+F1[Savybių vektorių sudarymas]
+
+F2[CSV failų generavimas
+Atskiras failas kiekvienai CWE]
+
+F3[Konstantinių savybių šalinimas]
+
+F4[Mokymo ir testavimo aibės padalijimas]
+
+F5[Standartizavimas
+StandardScaler]
+
+%% =====================================================
+%% 7 FAZĖ – MAŠININIS MOKYMAS
+%% =====================================================
+G1[Logistinė regresija
+Bazinis modelis]
+
+G2[Atsitiktinių miškų modelis
+Nelineariniai ryšiai]
+
+%% =====================================================
+%% 8 FAZĖ – VERTINIMAS
+%% =====================================================
+H1[Vertinimo metrikos
+Tikslumas
+Preciziškumas
+Jautrumas
+F1
+ROC-AUC]
+
+H2[Modelių palyginimas]
+
+%% =====================================================
+%% 9 FAZĖ – SAVYBIŲ SVARBOS ANALIZĖ
+%% =====================================================
+I1[Logistinės regresijos koeficientai]
+
+I2[Random Forest svarbos]
+
+I3[Permutation Importance]
+
+I4[SHAP paaiškinimai]
+
+%% =====================================================
+%% 10 FAZĖ – ABLACIJOS TYRIMAS
+%% =====================================================
+J1[Svarbiausių savybių atranka]
+
+J2[Dydžio savybių pašalinimas]
+
+J3[Pakartotinis mokymas
+Pakartotinis vertinimas]
+
+%% =====================================================
+%% SRAUTAS
+%% =====================================================
+A1 --> A4
+A2 --> A4
+A3 --> A4
+
+A4 --> B1
+B1 --> B2
+B2 --> B3
+
+B3 --> C1
+C1 --> C2
+C2 --> C3
+
+C3 --> D1
+D1 --> D2
+D2 --> D3
+
+D3 --> E1
+D3 --> E2
+D3 --> E3
+D3 --> E4
+D3 --> E5
+
+E1 --> F1
+E2 --> F1
+E3 --> F1
+E4 --> F1
+E5 --> F1
+
+F1 --> F2
+F2 --> F3
+F3 --> F4
+F4 --> F5
+
+F5 --> G1
+F5 --> G2
+
+G1 --> H1
+G2 --> H1
+H1 --> H2
+
+H2 --> I1
+H2 --> I2
+H2 --> I3
+H2 --> I4
+
+H2 --> J1
+J1 --> J2
+J2 --> J3

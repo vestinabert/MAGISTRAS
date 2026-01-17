@@ -1,0 +1,60 @@
+sequenceDiagram
+    autonumber
+
+    participant U as Tyrėjas
+    participant J as Joern REPL
+    participant CPG as Kodo savybių grafas (CPG)
+    participant AST as AST traversija
+    participant CSV as CSV failas
+
+    %% CPG įkėlimas
+    U->>J: joern cpg.bin
+    J->>CPG: Įkeliamas kodo savybių grafas
+
+    %% Metodų atranka
+    U->>J: cpg.method.filter(...)
+    J->>CPG: Filtruojami METHOD mazgai
+    CPG-->>J: Juliet metodai
+
+    %% Savybių išgavimo ciklas
+    loop Kiekvienam Juliet metodui
+
+        %% AST struktūra
+        U->>J: m.ast.size
+        J->>AST: AST traversija
+        AST-->>J: AST mazgų skaičius
+
+        U->>J: m.ast.isCall.size
+        AST-->>J: Iškvietimų skaičius
+
+        U->>J: m.ast.isControlStructure.size
+        AST-->>J: Valdymo struktūrų skaičius
+
+        U->>J: m.ast.depth.max
+        AST-->>J: Maksimalus AST gylis
+
+        %% API naudojimas
+        U->>J: m.ast.isCall.name(...)
+        AST-->>J: Įvesties / konversijų / „sink“ iškvietimų skaičius
+
+        %% Apsaugos ir validacija
+        U->>J: m.ast.isControlStructure.condition.code(...)
+        AST-->>J: Ribų ir NULL patikrinimų skaičius
+
+        %% Atmintis ir „sink“ operacijos
+        U->>J: m.ast.code(".*\\[.*\\].*=.*")
+        AST-->>J: Masyvų rašymo operacijų skaičius
+
+        %% Ciklo kontekstas
+        U->>J: sink.inAst.isControlStructure
+        AST-->>J: „Sink“ ciklo viduje (loginė reikšmė)
+
+        %% Heuristinė „taint“ analizė
+        U->>J: inputCallCount && sinkCallCount
+        J-->>J: taintReachable (loginė reikšmė)
+
+    end
+
+    %% Eksportas
+    U->>J: Files.write(...)
+    J->>CSV: Savybių vektoriai įrašomi į CSV
